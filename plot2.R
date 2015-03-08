@@ -1,0 +1,6 @@
+meterdata <- read.table(paste(getwd(),"/household_power_consumption.txt",sep=""), sep =";", header= TRUE)
+filtereddata <- subset(meterdata, Date == '1/2/2007' | Date == '2/2/2007')
+filtereddata$DateTime <- strptime(paste(filtereddata$Date, filtereddata$Time, sep=" "), format="%d/%m/%Y %H:%M:%S")
+png(file="plot2.png", width = 480, height = 480, units = "px", pointsize = 12)
+plot(filtereddata$DateTime,as.numeric(paste(filtereddata$Global_active_power)),type ="l", xlab="",ylab="Global Active Power(kilowatts)")
+dev.off()

@@ -1,0 +1,18 @@
+meterdata <- read.table(paste(getwd(),"/household_power_consumption.txt",sep=""), sep =";", header= TRUE)
+filtereddata <- subset(meterdata, Date == '1/2/2007' | Date == '2/2/2007')
+filtereddata$DateTime <- strptime(paste(filtereddata$Date, filtereddata$Time, sep=" "), format="%d/%m/%Y %H:%M:%S")
+png(file="plot4.png", width = 480, height = 480, units = "px", pointsize = 12)
+par(mfrow =c(2,2))
+with (filtereddata,
+{
+	plot(filtereddata$DateTime,as.numeric(paste(filtereddata$Global_active_power)),type ="l", xlab="",ylab="Global Active Power")
+	plot(filtereddata$DateTime,as.numeric(paste(filtereddata$Voltage)),type ="l", xlab="datetime",ylab="Voltage")
+	plot(filtereddata$DateTime,as.numeric(paste(filtereddata$Sub_metering_1)),ylim=range(c(as.numeric(paste(filtereddata$Sub_metering_1)),filtereddata$Sub_metering_2,filtereddata$Sub_metering_3)),type="l",xlab="",ylab="Energy Sub metering")
+	par(new=TRUE)
+	plot(filtereddata$DateTime,as.numeric(paste(filtereddata$Sub_metering_2)),ylim=range(c(as.numeric(paste(filtereddata$Sub_metering_1)),as.numeric(paste(filtereddata$Sub_metering_2)),filtereddata$Sub_metering_3)),type="l",col="red",xlab="",ylab="")
+	par(new=TRUE)
+	plot(filtereddata$DateTime,filtereddata$Sub_metering_3,ylim=range(c(as.numeric(paste(filtereddata$Sub_metering_1)),as.numeric(paste(filtereddata$Sub_metering_2)),filtereddata$Sub_metering_3)),type="l",col="blue",xlab="",ylab="")
+	legend("topright",legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"),col = c("black",rep("red",1),rep("blue",1)), lwd =c(1.5,1.5,1.5),bty="n")
+	plot(filtereddata$DateTime,as.numeric(paste(filtereddata$Global_reactive_power)),type ="l", xlab="datetime",ylab="Global_reactive_power")
+})
+dev.off()
